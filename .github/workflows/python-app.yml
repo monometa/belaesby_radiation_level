@@ -24,7 +24,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
+    - name: Set SSL config
+      run: export OPENSSL_CONF=openssl.cnf
     - name: execute py script 
       run: |
         python parse_svg_data.py
