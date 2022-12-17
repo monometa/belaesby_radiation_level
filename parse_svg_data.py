@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import csv
 
 url = "https://belaes.by/images/karta/SZZ.svg"
-r = requests.get(url)
+r = requests.get(url, verify=False)
 soup = BeautifulSoup(r.text, "lxml")
 
 id_region_tranformator = {
