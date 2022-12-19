@@ -26,8 +26,12 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Set SSL config
       run: |
-        cp ssl.cnf ~/ssl.conf
-        OPENSSL_CONF=~/ssl.conf
+        echo "openssl_conf = openssl_init" >> /usr/lib/ssl/openssl.cnf
+        echo "[openssl_init]" >> /usr/lib/ssl/openssl.cnf
+        echo "ssl_conf = ssl_sect" >> /usr/lib/ssl/openssl.cnf
+        echo "[ssl_sect]" >> /usr/lib/ssl/openssl.cnf
+        echo "[system_default_sect]" >> /usr/lib/ssl/openssl.cnf
+        echo "Options = UnsafeLegacyRenegotiation" >> /usr/lib/ssl/openssl.cnf
     - name: execute py script 
       run: |
         python parse_svg_data.py
