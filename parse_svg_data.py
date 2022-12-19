@@ -59,8 +59,8 @@ record = {}
 
 for k, v in id_region_tranformator.items():
     radiation_level = soup.find("tspan", {"id": f"{k}"}).text.strip()
-
     record[v] = radiation_level
+
 timestamp = soup.find("text", {"id": "maxTime"}).text.replace("  ", "").split(" ")
 record["date"] = timestamp[0]
 record["time"] = timestamp[1]
@@ -81,8 +81,6 @@ csv_columns = [
     "time",
 ]
 csv_file = "radiation.csv"
-
-print(record)
 
 with open(csv_file, "a") as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
