@@ -1,10 +1,8 @@
-import urllib3
+import csv
 import ssl
+import urllib3
 import requests
 from bs4 import BeautifulSoup
-import csv
-
-import requests
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
@@ -14,13 +12,6 @@ try:
     )
 except AttributeError:
     pass
-
-url = "https://belaes.by/images/karta/SZZ.svg"
-# r = requests.get(url, verify=False)
-
-
-###
-
 
 class CustomHttpAdapter(requests.adapters.HTTPAdapter):
     # "Transport adapter" that allows us to use custom ssl_context.
@@ -45,7 +36,7 @@ def get_legacy_session():
     session.mount("https://", CustomHttpAdapter(ctx))
     return session
 
-
+url = "https://belaes.by/images/karta/SZZ.svg"
 r = get_legacy_session().get(url)
 
 soup = BeautifulSoup(r.text, "lxml")
@@ -90,6 +81,8 @@ csv_columns = [
     "time",
 ]
 csv_file = "radiation.csv"
+
+print(record)
 
 with open(csv_file, "a") as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
