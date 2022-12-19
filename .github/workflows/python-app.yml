@@ -3,6 +3,7 @@ name: belaesby_radiation
 on:
   schedule:
     - cron: '35 * * * *'
+    - cron: '05 * * * *'
   workflow_dispatch:
 jobs:
   build:
