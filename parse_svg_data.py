@@ -2,6 +2,16 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
+import requests
+requests.packages.urllib3.disable_warnings()
+requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
+try:
+    requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += (
+        ":HIGH:!DH:!aNULL"
+    )
+except AttributeError:
+    pass
+
 url = "https://belaes.by/images/karta/SZZ.svg"
 r = requests.get(url, verify=False)
 soup = BeautifulSoup(r.text, "lxml")
