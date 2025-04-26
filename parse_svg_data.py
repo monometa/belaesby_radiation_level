@@ -37,33 +37,56 @@ def get_legacy_session():
     return session
 
 url = "https://belaes.by/images/karta/SZZ.svg"
-r = get_legacy_session().get(url)
-
-soup = BeautifulSoup(r.text, "lxml")
-
-id_region_tranformator = {
-    "tspan5239-3-2": "Белорусская АЭС",
-    "tspan5239-3": "Чехи",
-    "tspan5239-1": "Маркуны",
-    "tspan5239-36": "Ольховка",
-    "tspan5239-0": "Свирь",
-    "tspan5239": "Подольцы",
-    "tspan5239-6": "Гоза",
-    "tspan5239-57": "Ворона",
-    "tspan5239-5": "Вороняны",
-    "tspan5239-62": "Чернишки",
-    "tspan5239-2": "Рымдюры",
-}
 
 record = {}
 
-for k, v in id_region_tranformator.items():
-    radiation_level = soup.find("tspan", {"id": f"{k}"}).text.strip()
-    record[v] = radiation_level
+try:
+    r = get_legacy_session().get(url, timeout=30)
+    r.raise_for_status()
+    soup = BeautifulSoup(r.text, "lxml")
 
-timestamp = soup.find("text", {"id": "maxTime"}).text.replace("  ", "").split(" ")
-record["date"] = timestamp[0]
-record["time"] = timestamp[1]
+    id_region_tranformator = {
+        "tspan5239-3-2": "Белорусская АЭС",
+        "tspan5239-3": "Чехи",
+        "tspan5239-1": "Маркуны",
+        "tspan5239-36": "Ольховка",
+        "tspan5239-0": "Свирь",
+        "tspan5239": "Подольцы",
+        "tspan5239-6": "Гоза",
+        "tspan5239-57": "Ворона",
+        "tspan5239-5": "Вороняны",
+        "tspan5239-62": "Чернишки",
+        "tspan5239-2": "Рымдюры",
+    }
+
+    for k, v in id_region_tranformator.items():
+        radiation_level = soup.find("tspan", {"id": f"{k}"}).text.strip()
+        record[v] = radiation_level
+
+    timestamp = soup.find("text", {"id": "maxTime"}).text.replace("  ", "").split(" ")
+    record["date"] = timestamp[0]
+    record["time"] = timestamp[1]
+
+except requests.exceptions.RequestException as e:
+    print(f"Error while connecting... {e}")
+
+    now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+    date, time = now.split(" ")
+    record = {
+        "Белорусская АЭС": "N/A",
+        "Чехи": "N/A",
+        "Маркуны": "N/A",
+        "Ольховка": "N/A",
+        "Свирь": "N/A",
+        "Подольцы": "N/A",
+        "Гоза": "N/A",
+        "Ворона": "N/A",
+        "Вороняны": "N/A",
+        "Чернишки": "N/A",
+        "Рымдюры": "N/A",
+        "date": date,
+        "time": time,
+    }
 
 csv_columns = [
     "Белорусская АЭС",
