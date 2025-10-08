@@ -1,7 +1,9 @@
 import csv
 import ssl
-import urllib3
+from datetime import datetime
+
 import requests
+import urllib3
 from bs4 import BeautifulSoup
 
 requests.packages.urllib3.disable_warnings()
